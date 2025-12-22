@@ -35,13 +35,16 @@ function FeedData() {
     };
 
     fetchFeedData();
+    // Using [dispatch] in the dependency array is functionally the same as using [] because dispatch always remains same because it’s a stable reference
   }, [dispatch]);
+  // use useCallback here because this function is using as a prop for better performance 
 
   const handleRemoveFeed = (feedId) => {
     dispatch(addFeed(feeds.filter((feed) => feed._id !== feedId)));
   };
 
   // Filter feeds based on search query
+  // this is searching in every input type because it change searchQuery state which rerender component 
   const filteredFeeds = feeds.filter(
     (feed) =>
       !searchQuery ||
@@ -90,6 +93,7 @@ function FeedData() {
                 <FeedCard
                   key={feed._id}
                   {...feed}
+                  // this below is for removing feed card from feed once you send connect or ignore
                   handleRemoveFeed={handleRemoveFeed}
                 />
               ))}

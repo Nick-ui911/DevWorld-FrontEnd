@@ -60,7 +60,7 @@ const Premium = () => {
         },
         handler: verifyPremium,
       };
-
+      // window.Razorpay comes from script which is added in index.html;
       var rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
@@ -81,9 +81,9 @@ const Premium = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex flex-col items-center justify-center p-6 space-y-6">
       {/* Temporary Note */}
-      <div className="bg-red-600 text-white px-4 py-2 rounded-md shadow-lg text-center max-w-2xl w-full">
-        ⚠️ Note: Premium feature purchase is currently disabled due to merchant issues.
-        Enjoy Premuim Features Free For Now.
+      <div className="bg-red-600 text-white mt-14 px-4 py-10 rounded-md shadow-lg text-center max-w-2xl w-full">
+        ⚠️ Note: Premium feature purchases are currently available for testing
+        only and accept dummy money. No real transactions will be processed.
       </div>
 
       <div className="max-w-4xl w-full grid md:grid-cols-2 gap-6">

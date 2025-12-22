@@ -226,11 +226,10 @@ const Chat = () => {
 
   if (loading) return <Loader />;
 
-// i am commenting this because of inactive payment gateway
-  // ❌ Show animated message if user is NOT premium or still loading
-  // if (isPremium === null || isPremium === false) {
-  //   return <NotPremium />;
-  // }
+// Dummy Payment is live For Now
+  if (isPremium === null || isPremium === false) {
+    return <NotPremium />;
+  }
 
   
   return (

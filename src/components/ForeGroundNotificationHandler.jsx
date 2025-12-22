@@ -15,18 +15,20 @@ const ForeGroundNotificationHandler = () => {
       const clickAction = payload?.data?.click_action; // ✅ Grab click_action URL
 
       if (!title || !body || !clickAction) {
-        console.warn("⚠️ Missing title, body, or click_action in payload:", payload);
+        console.warn(
+          "⚠️ Missing title, body, or click_action in payload:",
+          payload
+        );
         return;
       }
 
       if (!location.pathname.startsWith("/chat/")) {
-        const toastId =  toast.info(
+        const toastId = toast.info(
           <div
             onClick={() => {
               const path = new URL(clickAction).pathname; // ✅ Get only /chat/userId part
               navigate(path);
               toast.dismiss(toastId); // 👈 dismiss the toast on click
-
             }}
             className="cursor-pointer bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white px-4 py-3 rounded-lg shadow-lg w-full sm:w-80 md:w-96"
           >
@@ -49,6 +51,10 @@ const ForeGroundNotificationHandler = () => {
         console.log("🔕 Notification blocked on chat page.");
       }
     });
+
+    // Cleanup: remove the FCM message listener when the component unmounts
+    // or when dependencies change. Prevents multiple listeners & duplicate notifications.
+  //  because cleanup function work in two situation first in unmounting and second when useEffect re-runs
 
     return () => unsubscribe();
   }, [location, navigate]);
