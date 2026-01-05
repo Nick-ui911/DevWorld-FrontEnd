@@ -19,7 +19,7 @@ const Chat = () => {
   const [connectionUser, setConnectionUser] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [isPremium, setIsPremium] = useState(null); // New state to track premium status
+  const [isPremium, setIsPremium] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mediaLoading, setMediaLoading] = useState(false);
   const [media, setMedia] = useState(null);
@@ -34,16 +34,13 @@ const Chat = () => {
   const userId = user?._id;
   const messagesEndRef = useRef(null);
 
-  // To check MemberShip Type
   const fetchProfile = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/profile/view`, {
         withCredentials: true,
       });
-      // console.log(res.data.isPremium)
-
       dispatch(addUser(res.data));
-      setIsPremium(res.data.isPremium); // Store isPremium status
+      setIsPremium(res.data.isPremium);
     } catch (error) {
       if (error.response?.status === 401) {
         navigate("/login");
@@ -51,7 +48,7 @@ const Chat = () => {
         console.error("Error fetching profile", error);
       }
     } finally {
-      setLoading(false); // Stop loading after fetching
+      setLoading(false);
     }
   };
 
@@ -68,8 +65,8 @@ const Chat = () => {
         const isCurrentUser = msg?.senderId?._id === userId;
         return {
           text: msg?.text,
-          media: msg?.media, // ✅ Add this line to map media properly
-          mediaType: getMediaType(msg?.media), // Determine media type
+          media: msg?.media,
+          mediaType: getMediaType(msg?.media),
           name: isCurrentUser ? "You" : msg?.senderId?.name || "Unknown User",
           date: msg?.date,
           time: msg?.time,
@@ -78,18 +75,17 @@ const Chat = () => {
       });
 
       setMessages(chat || []);
-      // ✅ Fix: Ensure connectionUser is set correctly
       if (res.data?.participants) {
         const otherUser = res.data.participants.find((p) => p._id !== userId);
         if (otherUser) {
-          setConnectionUser(otherUser); // ✅ Set correct connection user
+          setConnectionUser(otherUser);
         }
       }
     } catch (error) {
       console.error("Failed to fetch chat:", error);
     }
   };
-  // Function to determine media type
+
   const getMediaType = (url) => {
     if (!url) return null;
     const extension = url.split(".").pop().toLowerCase();
@@ -114,28 +110,25 @@ const Chat = () => {
     if (videoExtensions.includes(extension)) return "video";
     if (rawExtensions.includes(extension)) return "raw";
 
-    return "unknown"; // fallback if extension not matched
+    return "unknown";
   };
-  // Handle File Upload to Cloudinary
+
   const handleFileUpload = async (e) => {
     const uploadedFile = e.target.files[0];
     if (!uploadedFile) return;
 
-      // Check if file is a PDF
-  const extension = uploadedFile.name.split('.').pop().toLowerCase();
-  // because we are using cloudinary currently i am not trusted by cloudinary because i am using free tier
-  if (extension === "pdf") {
-    alert("PDF file are not supported");
-    e.target.value = null;
-    return; // Stop here if it's a PDF
-  }
+    const extension = uploadedFile.name.split(".").pop().toLowerCase();
+    if (extension === "pdf") {
+      alert("PDF files are not supported");
+      e.target.value = null;
+      return;
+    }
 
     const formData = new FormData();
     formData.append("file", uploadedFile);
     formData.append("upload_preset", "devworldimage-cloud");
 
     setMediaLoading(true);
-    // to upload pdf file to cloudinary use "raw" in place of "auto" in the below line but you have to be trusted by cloudinary
     try {
       const response = await axios.post(
         "https://api.cloudinary.com/v1_1/dj7i4ts8b/auto/upload",
@@ -146,10 +139,10 @@ const Chat = () => {
       setSelectedImage(fileUrl);
     } catch (err) {
       console.error("Error uploading file:", err);
-      setError(error + "Failed to upload image");
+      setError("Failed to upload image");
     } finally {
       setMediaLoading(false);
-      e.target.value = null; // 🔥 RESET the file input after upload , solve reselecting same image problem (means it select first image again and again even if i selected different image in second time) 
+      e.target.value = null;
     }
   };
 
@@ -194,10 +187,10 @@ const Chat = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, media, newMessage]);
+  }, [messages]);
 
   const sendMessage = () => {
-    if (!newMessage.trim() && !media) return; // Allow if any one exists
+    if (!newMessage.trim() && !media) return;
 
     socket.emit("sendMessage", {
       name: user.name,
@@ -226,55 +219,66 @@ const Chat = () => {
 
   if (loading) return <Loader />;
 
-// Dummy Payment is live For Now
   if (isPremium === null || isPremium === false) {
     return <NotPremium />;
   }
 
-  
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-gray-950  text-white overflow-hidden">
-      <header className="bg-gradient-to-r from-gray-900 via-black to-gray-900 p-4 flex items-center gap-3 shadow-lg sticky top-0 z-10">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-gray-950 text-white overflow-hidden">
+      {/* STICKY HEADER */}
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-gray-900 via-black to-gray-900 p-3 sm:p-4 flex items-center gap-2 sm:gap-3 shadow-xl border-b border-gray-700/50 backdrop-blur-sm">
         <button
           onClick={() => navigate("/connections")}
-          className="p-2 rounded-full hover:bg-gray-700"
+          className="p-1.5 sm:p-2 rounded-full hover:bg-gray-700 transition-colors flex-shrink-0"
+          aria-label="Go back"
         >
-          <ArrowLeft size={24} color="white" />
+          <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
         </button>
-        <h2 className="font-semibold text-lg flex-1 text-center">
-          {connectionUser ? connectionUser.name : "Loading..."}
-          {onlineUsers?.includes(connectionUserId) ? (
-            <span className="text-green-500 ml-2">● Online</span>
-          ) : (
-            <span className="text-red-500 ml-2">● Offline</span>
-          )}
-        </h2>
+        <div className="flex-1 min-w-0">
+          <h2 className="font-semibold text-base sm:text-lg truncate">
+            {connectionUser ? connectionUser.name : "Loading..."}
+          </h2>
+          <div className="flex items-center gap-1 text-xs sm:text-sm">
+            {onlineUsers?.includes(connectionUserId) ? (
+              <>
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span className="text-green-400">Online</span>
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                <span className="text-red-400">Offline</span>
+              </>
+            )}
+          </div>
+        </div>
       </header>
 
-      <main
-        className={`flex-1 overflow-y-auto p-4 space-y-4 ${
-          media ? "pb-38" : "pb-14"
-        }`}
-      >
+      {/* MESSAGES AREA WITH PROPER PADDING */}
+      <main className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
+        {/* Full Screen Image Modal */}
         {selectedImage && (
           <div
-            className="fixed inset-0 bg-gray-700 bg-opacity-80 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-[60] p-4"
             onClick={() => setSelectedImage(null)}
           >
             <button
-              className="absolute top-4 right-4 text-white text-3xl font-bold"
-              onClick={() => setSelectedImage(null)} // Close on cross click
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-white text-2xl sm:text-3xl font-bold bg-gray-800/50 rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center hover:bg-gray-700/50 transition-colors"
+              onClick={() => setSelectedImage(null)}
+              aria-label="Close image"
             >
               &times;
             </button>
             <img
               src={selectedImage}
               alt="Full view"
-              className="max-w-full max-h-full p-4 rounded-lg"
+              className="max-w-full max-h-full object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
         )}
 
+        {/* Messages */}
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -282,8 +286,18 @@ const Chat = () => {
               msg.senderId === userId ? "justify-end" : "justify-start"
             }`}
           >
-            <div className="max-w-xs p-2 rounded-lg bg-gray-700">
-              {msg.text && <p className="mb-1">{msg.text}</p>}
+            <div
+              className={`max-w-[75%] sm:max-w-xs p-2.5 sm:p-3 rounded-2xl shadow-lg ${
+                msg.senderId === userId
+                  ? "bg-gradient-to-br from-blue-600 to-purple-600 rounded-br-sm"
+                  : "bg-gray-700 rounded-bl-sm"
+              }`}
+            >
+              {msg.text && (
+                <p className="text-sm sm:text-base break-words mb-1">
+                  {msg.text}
+                </p>
+              )}
 
               {msg.media && (
                 <>
@@ -291,7 +305,7 @@ const Chat = () => {
                     <img
                       src={msg.media}
                       alt="Media"
-                      className="w-40 h-40 object-cover rounded cursor-pointer"
+                      className="w-full max-w-[200px] sm:max-w-[240px] h-auto object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                       onClick={() => setSelectedImage(msg.media)}
                     />
                   )}
@@ -300,7 +314,7 @@ const Chat = () => {
                     <video
                       src={msg.media}
                       controls
-                      className="w-40 h-40 rounded"
+                      className="w-full max-w-[200px] sm:max-w-[240px] rounded-lg"
                     />
                   )}
 
@@ -309,19 +323,21 @@ const Chat = () => {
                       href={msg.media}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400 underline break-words"
+                      className="text-blue-300 underline break-all text-sm hover:text-blue-200 transition-colors"
                     >
                       📄 View File
                     </a>
                   )}
 
                   {msg.mediaType === "unknown" && (
-                    <p className="text-red-400">Unsupported file type</p>
+                    <p className="text-red-400 text-sm">Unsupported file type</p>
                   )}
                 </>
               )}
 
-              <p className="text-xs text-gray-400 mt-1">{msg.time}</p>
+              <p className="text-[10px] sm:text-xs text-gray-300 mt-1 opacity-70">
+                {msg.time}
+              </p>
             </div>
           </div>
         ))}
@@ -329,26 +345,30 @@ const Chat = () => {
         <div ref={messagesEndRef} />
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black border-t border-gray-700 shadow-2xl z-50">
-        {/* IMAGE PREVIEW BEFORE INPUT */}
+      {/* STICKY FOOTER INPUT BAR */}
+      <footer className="sticky bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-900 to-gray-800/95 border-t border-gray-700/50 shadow-2xl backdrop-blur-md z-50">
+        {/* Image Preview */}
         {(media || mediaLoading) && (
-          <div className="max-w-4xl mx-auto px-3 pt-2 flex items-center">
-            <div className="relative h-20 w-20">
+          <div className="px-3 sm:px-4 pt-2 sm:pt-3 flex items-center">
+            <div className="relative h-16 w-16 sm:h-20 sm:w-20">
               {mediaLoading ? (
-                <div className="h-20 w-20 flex items-center justify-center bg-gray-700 rounded-lg">
-                  {/* 👇 Small inline loader */}
-                  <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="h-16 w-16 sm:h-20 sm:w-20 flex items-center justify-center bg-gray-700 rounded-lg">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : (
                 <>
                   <img
                     src={media}
                     alt="preview"
-                    className="h-20 w-20 object-cover rounded-lg"
+                    className="h-16 w-16 sm:h-20 sm:w-20 object-cover rounded-lg shadow-lg"
                   />
                   <button
-                    onClick={() => setMedia(null)}
-                    className="absolute top-0 right-0 bg-black bg-opacity-60 text-white rounded-full p-1 hover:bg-opacity-80"
+                    onClick={() => {
+                      setMedia(null);
+                      setSelectedImage(null);
+                    }}
+                    className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs sm:text-sm font-bold transition-colors shadow-lg"
+                    aria-label="Remove image"
                   >
                     ✕
                   </button>
@@ -358,93 +378,65 @@ const Chat = () => {
           </div>
         )}
 
-        <div className="max-w-4xl mx-auto px-3 py-2 flex items-center space-x-4">
-          {" "}
-          {/* Increased space-x */}
+        {/* Input Controls */}
+        <div className="px-2 sm:px-4 py-2 sm:py-3 flex items-center gap-1.5 sm:gap-3">
           {/* File Upload */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <input
               type="file"
               id="fileInput"
-              accept="image/*,application/pdf"
+              accept="image/*,video/*"
               onChange={handleFileUpload}
               className="hidden"
             />
             <label
               htmlFor="fileInput"
-              className="cursor-pointer p-2 rounded-full hover:bg-gray-700 transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95 flex items-center justify-center"
+              className="cursor-pointer p-2 rounded-full hover:bg-gray-700 transition-all duration-300 transform hover:scale-110 active:scale-95 flex items-center justify-center"
             >
-              <FaPaperclip size={20} className="text-white" />
+              <FaPaperclip size={18} className="sm:w-5 sm:h-5 text-gray-300" />
             </label>
           </div>
-          {/* Emoji Picker Trigger */}
-          <div className="relative">
+
+          {/* Emoji Picker */}
+          <div className="relative flex-shrink-0">
             <button
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="group relative p-2 rounded-full bg-transparent hover:bg-gray-200 
-             transition-transform duration-300 ease-out 
-             hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="p-2 rounded-full hover:bg-gray-700 transition-all duration-300 transform hover:scale-110 active:scale-95"
+              aria-label="Open emoji picker"
             >
-              <span className="text-2xl sm:text-3xl transition-transform duration-300 group-hover:rotate-12">
-                😊
-              </span>
+              <span className="text-xl sm:text-2xl">😊</span>
             </button>
 
-            {/* Emoji Picker Dropdown */}
             {showEmojiPicker && (
-              <div
-                className="absolute bottom-full mb-2 right-0 sm:right-10 w-full max-w-xs
-          transform -translate-x-2 sm:translate-x-0
-          scale-90 sm:scale-100 origin-bottom-right"
-              >
-                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              <div className="absolute bottom-full mb-2 right-0 z-[60]">
+                <div className="scale-75 sm:scale-90 md:scale-100 origin-bottom-right">
+                  <EmojiPicker onEmojiClick={handleEmojiClick} />
+                </div>
               </div>
             )}
           </div>
+
           {/* Message Input */}
-          <div className="flex-1 relative">
+          <div className="flex-1 min-w-0">
             <input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyDown={handleKeyPress}
               onFocus={() => setShowEmojiPicker(false)}
               type="text"
-              className="w-full pl-4 pr-10 py-2 text-sm sm:text-base 
-          bg-gray-700/50 backdrop-blur-sm 
-          border border-gray-600/30 
-          rounded-full 
-          text-white 
-          placeholder-gray-400 
-          focus:outline-none 
-          focus:ring-2 focus:ring-blue-500/50 
-          transition-all duration-300 
-          ease-in-out"
+              className="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-gray-700/50 border border-gray-600/30 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
               placeholder="Type a message..."
             />
           </div>
+
           {/* Send Button */}
           <button
             onClick={sendMessage}
-            disabled={!newMessage && !media}
-            className="
-        bg-gradient-to-r from-blue-600 to-purple-600 
-        text-white 
-        p-2 
-        rounded-full 
-        hover:from-blue-700 hover:to-purple-700 
-        transition-all duration-300 
-        ease-in-out 
-        transform 
-        hover:scale-110 
-        active:scale-95
-        disabled:opacity-30 
-        disabled:cursor-not-allowed
-        flex items-center justify-center
-        shadow-lg
-        hover:shadow-xl
-      "
+            disabled={!newMessage.trim() && !media}
+            className="flex-shrink-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-2 sm:p-2.5 rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-lg"
+            aria-label="Send message"
           >
-            <Send size={20} />
+            <Send size={18} className="sm:w-5 sm:h-5" />
           </button>
         </div>
       </footer>
