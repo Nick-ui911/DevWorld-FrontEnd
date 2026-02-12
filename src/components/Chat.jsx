@@ -132,7 +132,7 @@ const Chat = () => {
     try {
       const response = await axios.post(
         "https://api.cloudinary.com/v1_1/dj7i4ts8b/auto/upload",
-        formData
+        formData,
       );
       const fileUrl = response.data.secure_url;
       setMedia(fileUrl);
@@ -176,7 +176,7 @@ const Chat = () => {
           ...messages,
           { name, text, time, date, media, mediaType, senderId },
         ]);
-      }
+      },
     );
 
     return () => {
@@ -330,7 +330,9 @@ const Chat = () => {
                   )}
 
                   {msg.mediaType === "unknown" && (
-                    <p className="text-red-400 text-sm">Unsupported file type</p>
+                    <p className="text-red-400 text-sm">
+                      Unsupported file type
+                    </p>
                   )}
                 </>
               )}
@@ -408,8 +410,8 @@ const Chat = () => {
             </button>
 
             {showEmojiPicker && (
-              <div className="absolute bottom-full mb-2 right-0 z-[60]">
-                <div className="scale-75 sm:scale-90 md:scale-100 origin-bottom-right">
+              <div className="absolute bottom-full left-0 mb-2 z-[60]">
+                <div className="scale-75 origin-bottom-left sm:scale-90 md:scale-100">
                   <EmojiPicker onEmojiClick={handleEmojiClick} />
                 </div>
               </div>
