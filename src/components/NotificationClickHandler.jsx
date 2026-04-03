@@ -5,7 +5,6 @@ const NotificationClickHandler = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-      // Guard: service workers may not be available in all environments
       if (!("serviceWorker" in navigator) || !navigator.serviceWorker) {
         console.warn("Service Worker not supported — NotificationClickHandler disabled");
         return;
@@ -15,13 +14,21 @@ const NotificationClickHandler = () => {
         console.log("📨 NotificationClickHandler received message:", event.data);
         if (event.data?.type === "OPEN_CHAT" && event.data?.path) {
           console.log("🚀 Navigating to:", event.data.path);
-          navigate(event.data.path);
+          // Small delay to ensure the app is focused and ready
+          setTimeout(() => {
+            navigate(event.data.path);
+          }, 100);
         }
       };
 
+      // Listen on the serviceWorker container for messages from the SW
       navigator.serviceWorker.addEventListener("message", handleMessage);
 
-      // ✅ Cleanup: remove listener on unmount to prevent duplicates
+      // ✅ Also ensure the SW is ready and controlled
+      navigator.serviceWorker.ready.then((registration) => {
+        console.log("✅ Service Worker ready:", registration.scope);
+      });
+
       return () => {
         navigator.serviceWorker.removeEventListener("message", handleMessage);
       };
@@ -31,4 +38,3 @@ const NotificationClickHandler = () => {
 }
 
 export default NotificationClickHandler;
-

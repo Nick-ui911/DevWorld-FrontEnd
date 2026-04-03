@@ -36,30 +36,29 @@ const Navbar = () => {
   };
 
   return (
-    <div className="fixed top-0 w-full h-20 flex items-center justify-between px-4 md:px-6 bg-gradient-to-r from-gray-900 via-black to-gray-900 shadow-lg z-10">
+    <div className="fixed top-0 w-full h-16 sm:h-18 flex items-center justify-between px-4 md:px-8 bg-[#0a0e1a]/80 backdrop-blur-xl shadow-[0_1px_0_rgba(255,255,255,0.06)] z-50 border-b border-white/[0.06]">
       {/* Logo */}
       <Link
-  to="/"
-  className="text-2xl md:text-3xl font-extrabold tracking-wide hover:scale-105 transition 
-  bg-gradient-to-r from-blue-400 via-purple-500 to-red-500 bg-clip-text text-transparent"
->
-  DevWorld
-</Link>
+        to="/"
+        className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight hover:scale-105 transition-transform duration-300 gradient-text"
+      >
+        DevWorld
+      </Link>
 
       {/* Navigation Icons */}
-      <div className="hidden md:flex items-center gap-6 text-white text-xl md:text-2xl">
+      <div className="hidden md:flex items-center gap-1">
         <Link
           to={location.pathname === "/feeddata" ? "/" : "/feeddata"}
-          className="hover:text-gray-300 transition"
+          className="p-2.5 rounded-xl text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all duration-200"
         >
-          {location.pathname === "/feeddata" ? <FiHome /> : <FiDatabase />}
+          {location.pathname === "/feeddata" ? <FiHome size={20} /> : <FiDatabase size={20} />}
         </Link>
-        <Link to="/contact" className="hover:text-gray-300 transition">
-          <IoMdContacts />
+        <Link to="/contact" className="p-2.5 rounded-xl text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all duration-200">
+          <IoMdContacts size={20} />
         </Link>
         {user && (
-          <Link to="/profile" className="hover:text-gray-300 transition">
-            <FiUser />
+          <Link to="/profile" className="p-2.5 rounded-xl text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all duration-200">
+            <FiUser size={20} />
           </Link>
         )}
       </div>
@@ -67,69 +66,72 @@ const Navbar = () => {
       {/* User Profile & Dropdown */}
       <div className="relative" ref={dropdownRef}>
         {user ? (
-          <button onClick={() => setDropdownOpen(!dropdownOpen)} className="focus:outline-none">
-            <img
-              alt="User Avatar"
-              className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/30"
-              src={
-                user?.PhotoUrl ||
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-              }
-            />
+          <button onClick={() => setDropdownOpen(!dropdownOpen)} className="focus:outline-none group">
+            <div className="relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+              <img
+                alt="User Avatar"
+                className="relative w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-white/10 object-cover"
+                src={
+                  user?.PhotoUrl ||
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                }
+              />
+            </div>
           </button>
         ) : (
-          <Link to="/login" className="bg-red-600 text-white px-3 py-1 md:px-4 md:py-2 rounded-full shadow-md hover:bg-red-700 transition">
+          <Link to="/login" className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-lg hover:shadow-indigo-500/25 hover:scale-105 transition-all duration-300">
             Login
           </Link>
         )}
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-40 md:w-48 bg-white rounded-lg shadow-lg text-sm md:text-base">
-            <ul className="py-2 text-gray-700">
+          <div className="absolute right-0 mt-3 w-56 glass-card rounded-2xl overflow-hidden animate-slide-down">
+            <ul className="py-2">
               <li>
                 <Link
                   to={location.pathname === "/feeddata" ? "/" : "/feeddata"}
-                  className="flex items-center gap-2 px-3 md:px-4 py-2 hover:bg-gray-200"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  {location.pathname === "/feeddata" ? <FiHome /> : <FiDatabase />} 
+                  {location.pathname === "/feeddata" ? <FiHome size={16} /> : <FiDatabase size={16} />} 
                   {location.pathname === "/feeddata" ? "Home" : "Feed"}
                 </Link>
               </li>
               <li>
-                <Link to="/profile" className="flex items-center gap-2 px-3 md:px-4 py-2 hover:bg-gray-200" onClick={() => setDropdownOpen(false)}>
-                  <FiUser /> Profile
+                <Link to="/profile" className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all" onClick={() => setDropdownOpen(false)}>
+                  <FiUser size={16} /> Profile
                 </Link>
               </li>
               <li>
-                <Link to="/connections" className="flex items-center gap-2 px-3 md:px-4 py-2 hover:bg-gray-200" onClick={() => setDropdownOpen(false)}>
-                  <IoMdContacts /> Connections
+                <Link to="/connections" className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all" onClick={() => setDropdownOpen(false)}>
+                  <IoMdContacts size={16} /> Connections
                 </Link>
               </li>
               <li>
-                <Link to="/premium" className="flex items-center gap-2 px-3 md:px-4 py-2 hover:bg-gray-200" onClick={() => setDropdownOpen(false)}>
-                  ⭐ Get Premium
+                <Link to="/premium" className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all" onClick={() => setDropdownOpen(false)}>
+                  <span className="text-amber-400">⭐</span> Get Premium
                 </Link>
               </li>
               <li>
-                <Link to="/request" className="flex items-center gap-2 px-3 md:px-4 py-2 hover:bg-gray-200" onClick={() => setDropdownOpen(false)}>
-                  📩 Requests
+                <Link to="/request" className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all" onClick={() => setDropdownOpen(false)}>
+                  <span>📩</span> Requests
                 </Link>
               </li>
               <li>
-                <Link to="/ForgotPasswordPage" className="flex items-center gap-2 px-3 md:px-4 py-2 hover:bg-gray-200" onClick={() => setDropdownOpen(false)}>
-                  🔑 Update Password
+                <Link to="/ForgotPasswordPage" className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#94a3b8] hover:text-white hover:bg-white/[0.06] transition-all" onClick={() => setDropdownOpen(false)}>
+                  <span>🔑</span> Update Password
                 </Link>
               </li>
-              <li>
+              <li className="border-t border-white/[0.06] mt-1 pt-1">
                 <button
                   onClick={() => {
                     handleLogout();
                     setDropdownOpen(false);
                   }}
-                  className="flex items-center w-full px-3 md:px-4 py-2 text-red-600 hover:bg-gray-200"
+                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all"
                 >
-                  <FiLogOut className="mr-2" /> Logout
+                  <FiLogOut size={16} /> Logout
                 </button>
               </li>
             </ul>

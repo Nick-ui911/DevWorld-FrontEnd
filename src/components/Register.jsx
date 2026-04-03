@@ -22,8 +22,6 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
- 
-
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (password) =>
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
@@ -85,7 +83,7 @@ const Register = () => {
 
       const response = await axios.post(
         BASE_URL + "/google-signup",
-        { name: displayName, email,PhotoUrl:photoURL,idToken},
+        { name: displayName, email, PhotoUrl: photoURL, idToken },
         { withCredentials: true }
       );
 
@@ -99,103 +97,134 @@ const Register = () => {
   };
 
   return (
-    <div className="flex mt-12 items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 animate-fade-in">
-      <div className="bg-gray-400 bg-gradient-to-br from-gray-800 via-gray-900 to-gray-950 shadow-xl rounded-2xl p-8 w-96 animate-slide-in">
-        <h2 className="text-2xl font-bold text-white text-center mb-6">
-          Create an Account
-        </h2>
+    <div className="flex items-center justify-center min-h-screen bg-[#0a0e1a] pt-20 pb-10 px-4">
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 right-1/3 w-72 h-72 bg-violet-600/10 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-64 h-64 bg-indigo-600/8 rounded-full blur-[80px]"></div>
+      </div>
+
+      <div className="relative glass-card p-8 sm:p-10 rounded-2xl w-full max-w-md animate-fade-in-up">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
+          <p className="text-sm text-[#64748b]">Join the DevWorld community today</p>
+        </div>
+
         {errorMessage && (
-          <p className="text-red-500 text-sm text-center animate-pulse">
+          <div className="mb-5 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">
             {errorMessage}
-          </p>
+          </div>
         )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            className="w-full p-3 rounded-lg bg-white/30 text-white placeholder-white focus:outline-none"
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full p-3 rounded-lg bg-white/30 text-white placeholder-white focus:outline-none"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-[#94a3b8] mb-1.5">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all"
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#94a3b8] mb-1.5">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
           <div className="relative">
+            <label className="block text-sm font-medium text-[#94a3b8] mb-1.5">Password</label>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="Password"
-              className="w-full p-3 rounded-lg bg-white/30 text-white placeholder-white focus:outline-none"
+              placeholder="••••••••"
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all pr-12"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <span
-              className="absolute right-3 top-3 cursor-pointer text-black"
+            <button
+              type="button"
+              className="absolute right-4 top-[38px] text-[#64748b] hover:text-white transition-colors"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
+              {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+            </button>
           </div>
-          <input
-            type="number"
-            name="age"
-            placeholder="Age"
-            className="w-full p-3 rounded-lg bg-white/30 text-white placeholder-white focus:outline-none"
-            onChange={(e) => setAge(e.target.value)}
-            required
-          />
-          <select
-            name="gender"
-            className="w-full p-3 rounded-lg bg-white/30 text-black placeholder-white focus:outline-none"
-            onChange={(e) => setGender(e.target.value)}
-            required
-          >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
+
+          <div>
+            <label className="block text-sm font-medium text-[#94a3b8] mb-1.5">Age</label>
+            <input
+              type="number"
+              name="age"
+              placeholder="25"
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all"
+              onChange={(e) => setAge(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[#94a3b8] mb-1.5">Gender</label>
+            <select
+              name="gender"
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all appearance-none cursor-pointer"
+              style={{ backgroundImage: "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\")", backgroundPosition: "right 12px center", backgroundRepeat: "no-repeat", backgroundSize: "16px" }}
+              onChange={(e) => setGender(e.target.value)}
+              required
+            >
+              <option value="" className="bg-[#111827]">Select Gender</option>
+              <option value="Male" className="bg-[#111827]">Male</option>
+              <option value="Female" className="bg-[#111827]">Female</option>
+              <option value="Other" className="bg-[#111827]">Other</option>
+            </select>
+          </div>
+
           <button
             type="submit"
-            className="w-full p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:bg-blue-600 transition flex justify-center items-center"
+            className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-300 flex justify-center items-center mt-2"
           >
             {loading ? (
-              <span className="animate-spin border-4 border-white border-t-transparent rounded-full h-6 w-6"></span>
+              <span className="animate-spin border-2 border-white/30 border-t-white rounded-full h-5 w-5"></span>
             ) : (
-              "Register"
+              "Create Account"
             )}
           </button>
         </form>
 
-        <div className="flex items-center my-4">
-          <div className="flex-grow h-px bg-gray-600"></div>
-          <span className="mx-2 text-gray-400">or</span>
-          <div className="flex-grow h-px bg-gray-600"></div>
+        {/* Divider */}
+        <div className="flex items-center my-5">
+          <div className="flex-grow h-px bg-white/[0.06]"></div>
+          <span className="mx-4 text-xs text-[#64748b] uppercase tracking-wider">or</span>
+          <div className="flex-grow h-px bg-white/[0.06]"></div>
         </div>
 
         <button
           onClick={handleGoogleSignUp}
-          className="w-full flex items-center justify-center p-3 bg-white rounded-lg text-black hover:bg-gray-200 transition"
+          className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white font-medium hover:bg-white/[0.08] transition-all duration-300"
         >
-          <FcGoogle className="text-2xl mr-2" />
+          <FcGoogle size={20} />
           Sign up with Google
         </button>
-        <div className="text-center mt-4">
-            <p className="text-sm text-white">
-              Don't have an account?{" "}
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Login
-              </Link>
-            </p>
-          </div>
-      </div>
 
+        <div className="text-center mt-6">
+          <p className="text-sm text-[#64748b]">
+            Already have an account?{" "}
+            <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+              Login
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

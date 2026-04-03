@@ -42,30 +42,26 @@ const FeedCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="group relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white rounded-3xl shadow-2xl overflow-hidden 
-          max-w-sm sm:max-w-md w-full flex flex-col min-h-[480px] border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:shadow-purple-500/20 hover:shadow-2xl"
+      className="group relative glass-card text-white rounded-2xl overflow-hidden 
+          max-w-sm sm:max-w-md w-full flex flex-col min-h-[480px] hover:border-indigo-500/30 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(99,102,241,0.1)]"
     >
       {/* Gradient Overlay on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-blue-500/0 to-pink-500/0 group-hover:from-purple-500/5 group-hover:via-blue-500/5 group-hover:to-pink-500/5 transition-all duration-500 pointer-events-none z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-violet-500/0 to-emerald-500/0 group-hover:from-indigo-500/[0.03] group-hover:via-violet-500/[0.03] group-hover:to-emerald-500/[0.03] transition-all duration-500 pointer-events-none z-10"></div>
 
       {/* Profile Image Section */}
       <div className="relative w-full h-52 sm:h-64 overflow-hidden">
-        {/* Gradient Overlay on Image */}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent z-10"></div>
-
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e1a] via-[#0a0e1a]/60 to-transparent z-10"></div>
         <img
           src={PhotoUrl || (gender === "Male" ? maleProfile : femaleProfile)}
           alt={name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
 
         {/* Age Badge */}
         {age !== null && age !== undefined && (
           <div className="absolute top-4 right-4 z-20">
-            <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-gray-600/50">
-              <span className="text-white font-semibold text-sm">
-                {age} yrs
-              </span>
+            <div className="glass-card px-3 py-1.5 rounded-full">
+              <span className="text-white font-semibold text-sm">{age} yrs</span>
             </div>
           </div>
         )}
@@ -73,8 +69,8 @@ const FeedCard = ({
         {/* Location Badge */}
         {location && (
           <div className="absolute bottom-4 left-4 z-20">
-            <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-2 rounded-full border border-gray-600/50">
-              <FaMapMarkerAlt className="text-purple-400 text-xs" />
+            <div className="glass-card flex items-center gap-2 px-3 py-1.5 rounded-full">
+              <FaMapMarkerAlt className="text-indigo-400 text-xs" />
               <span className="text-white text-xs font-medium">{location}</span>
             </div>
           </div>
@@ -83,30 +79,24 @@ const FeedCard = ({
 
       {/* Content Section */}
       <div className="relative z-20 p-5 sm:p-6 flex-grow flex flex-col space-y-4">
-        {/* Name */}
         <div>
-          <h3 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
-            {name}
-          </h3>
+          <h3 className="text-xl sm:text-2xl font-bold text-white">{name}</h3>
         </div>
 
-        {/* Description */}
-        <p className="text-gray-400 text-sm sm:text-base leading-relaxed line-clamp-2">
+        <p className="text-[#94a3b8] text-sm leading-relaxed line-clamp-2">
           {description || "No description available"}
         </p>
 
         {/* Skills Section */}
         <div className="flex-grow">
           <div className="flex items-center gap-2 mb-3">
-            <div className="h-px flex-grow bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
-            <h4 className="text-xs uppercase text-gray-400 font-bold tracking-widest">
-              Skills
-            </h4>
-            <div className="h-px flex-grow bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
+            <div className="h-px flex-grow bg-gradient-to-r from-transparent via-white/[0.06] to-transparent"></div>
+            <h4 className="text-[10px] uppercase text-[#64748b] font-bold tracking-[0.2em]">Skills</h4>
+            <div className="h-px flex-grow bg-gradient-to-r from-transparent via-white/[0.06] to-transparent"></div>
           </div>
 
           {skills?.filter((s) => s.trim()).length > 0 ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {skills
                 .filter((skill) => skill.trim())
                 .map((skill, index) => (
@@ -115,40 +105,29 @@ const FeedCard = ({
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-gradient-to-r from-purple-600/80 to-blue-600/80 hover:from-purple-500 hover:to-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold border border-purple-500/30 hover:border-purple-400/50 transition-all duration-200 cursor-default shadow-lg"
+                    className="bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 px-3 py-1 rounded-lg text-xs font-medium border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-200 cursor-default"
                   >
                     {skill.trim()}
                   </motion.span>
                 ))}
             </div>
           ) : (
-            <span className="text-gray-500 text-sm italic">
-              No skills added yet
-            </span>
+            <span className="text-[#64748b] text-sm italic">No skills added yet</span>
           )}
         </div>
       </div>
 
-      {/* Action Buttons / Loader */}
-      <div className="relative z-20 p-4 sm:p-5 border-t border-gray-700/50 bg-gradient-to-b from-gray-800/50 to-gray-900/80 backdrop-blur-sm">
+      {/* Action Buttons */}
+      <div className="relative z-20 p-4 sm:p-5 border-t border-white/[0.06]">
         {isLoading ? (
           <div className="flex justify-center py-2">
             <motion.div className="flex gap-2">
               {[0, 1, 2].map((i) => (
                 <motion.span
                   key={i}
-                  className="w-3 h-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full shadow-lg"
-                  animate={{
-                    y: [0, -8, 0],
-                    opacity: [0.3, 1, 0.3],
-                  }}
-                  transition={{
-                    duration: 0.6,
-                    repeat: Infinity,
-                    repeatDelay: 0.2,
-                    ease: "easeInOut",
-                    delay: i * 0.2,
-                  }}
+                  className="w-2.5 h-2.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full"
+                  animate={{ y: [0, -6, 0], opacity: [0.3, 1, 0.3] }}
+                  transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
                 ></motion.span>
               ))}
             </motion.div>
@@ -156,25 +135,23 @@ const FeedCard = ({
         ) : (
           <div className="flex gap-3 w-full">
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => handleRequestSend("ignored")}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white px-4 py-3 rounded-xl sm:rounded-2xl flex-1 flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg hover:shadow-red-500/50 transition-all duration-300 border border-red-500/30"
+              className="bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 px-4 py-2.5 rounded-xl flex-1 flex items-center justify-center gap-2 font-semibold text-sm border border-rose-500/20 hover:border-rose-500/30 transition-all duration-300"
             >
-              <FaUserAltSlash className="text-base sm:text-lg" />
-              <span className="hidden xs:inline">Ignore</span>
-              <span className="xs:hidden">✕</span>
+              <FaUserAltSlash size={14} />
+              <span>Ignore</span>
             </motion.button>
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => handleRequestSend("interested")}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 rounded-xl sm:rounded-2xl flex-1 flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg hover:shadow-green-500/50 transition-all duration-300 border border-green-500/30"
+              className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-4 py-2.5 rounded-xl flex-1 flex items-center justify-center gap-2 font-semibold text-sm shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-300"
             >
-              <FaUserCheck className="text-base sm:text-lg" />
-              <span className="hidden xs:inline">Connect</span>
-              <span className="xs:hidden">✓</span>
+              <FaUserCheck size={14} />
+              <span>Connect</span>
             </motion.button>
           </div>
         )}
@@ -183,7 +160,7 @@ const FeedCard = ({
           <motion.p
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-red-400 text-xs sm:text-sm text-center mt-3 bg-red-500/10 py-2 rounded-lg border border-red-500/20"
+            className="text-rose-400 text-xs text-center mt-3 bg-rose-500/10 py-2 rounded-lg border border-rose-500/20"
           >
             {error}
           </motion.p>

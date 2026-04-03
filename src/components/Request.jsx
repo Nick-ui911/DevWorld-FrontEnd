@@ -49,9 +49,7 @@ const Request = () => {
       }
 
       setSuccessMessage(
-        `Request ${
-          status === "accepted" ? "accepted" : "rejected"
-        } successfully`
+        `Request ${status === "accepted" ? "accepted" : "rejected"} successfully`
       );
       setError("");
     } catch (error) {
@@ -67,87 +65,86 @@ const Request = () => {
 
   useEffect(() => {
     if (successMessage) {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-      }, 2000);
-
+      const timer = setTimeout(() => setSuccessMessage(""), 2000);
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white mt-16">
-      {/* Content Wrapper */}
-      <div className="flex-grow container mx-auto px-6 py-12">
-        <h2 className="text-4xl font-extrabold text-center mb-10">
-          My Requests
-        </h2>
+    <div className="min-h-screen flex flex-col bg-[#0a0e1a] text-white pt-24">
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-indigo-600/6 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-violet-600/5 rounded-full blur-[100px]"></div>
+      </div>
+
+      <div className="flex-grow container mx-auto px-4 sm:px-6 py-8 relative z-0">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <p className="text-xs font-semibold text-indigo-400 tracking-widest uppercase mb-2">Incoming</p>
+          <h2 className="text-3xl font-bold">My <span className="gradient-text">Requests</span></h2>
+        </div>
 
         {successMessage && (
-          <div className="flex items-center justify-center mb-6 text-white text-lg font-semibold bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 bg-opacity-80 p-4 rounded-lg shadow-lg transition-all animate-fade-in">
-            ✅ {successMessage}
+          <div className="flex items-center justify-center mb-6 text-emerald-400 text-sm font-medium glass-card border-emerald-500/20 p-3 rounded-xl max-w-md mx-auto animate-fade-in">
+            ✓ {successMessage}
           </div>
         )}
 
         {error && (
-          <p className="text-center text-red-400 text-lg font-semibold bg-red-900 bg-opacity-20 p-3 rounded-lg shadow-md">
+          <div className="text-center mb-6 text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 p-3 rounded-xl max-w-md mx-auto">
             {error}
-          </p>
+          </div>
         )}
 
         {loading ? (
           <Loader />
         ) : requests.length === 0 ? (
-          <p className="text-center text-gray-400 text-lg">
-            No requests found.
-          </p>
+          <div className="text-center mt-16">
+            <div className="text-6xl mb-4" style={{ animation: 'float 3s ease-in-out infinite' }}>📩</div>
+            <p className="text-[#64748b] text-lg">No requests found.</p>
+          </div>
         ) : (
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8 max-w-6xl mx-auto ">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 max-w-6xl mx-auto">
             {requests.map((user) => (
               <div
                 key={user._id}
-                className="relative bg-gradient-to-br from-gray-800 via-gray-900 to-gray-950 
-                 shadow-xl rounded-2xl p-6 flex flex-col items-center transition-all 
-                 transform hover:scale-105 hover:shadow-2xl border border-gray-700 overflow-hidden"
+                className="glass-card glass-card-hover rounded-2xl p-6 flex flex-col items-center transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Profile Picture */}
-                <img
-                  src={
-                    user.fromUserId?.PhotoUrl ||
-                    "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2220431045.jpg"
-                  }
-                  alt={user.fromUserId?.name || "Unknown User"}
-                  className="w-20 h-20 rounded-full border-4 border-gray-600 shadow-md"
-                />
+                <div className="relative mb-4">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full blur-sm opacity-40"></div>
+                  <img
+                    src={
+                      user.fromUserId?.PhotoUrl ||
+                      "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2220431045.jpg"
+                    }
+                    alt={user.fromUserId?.name || "Unknown User"}
+                    className="relative w-18 h-18 rounded-full border-2 border-[#0a0e1a] object-cover"
+                  />
+                </div>
 
                 {/* User Info */}
-                <h3 className="text-lg font-bold mt-3">
-                  {user.fromUserId?.name || "Unknown"}
-                </h3>
-                <p className="text-sm text-gray-400">
-                  {user.fromUserId?.gender || "Unknown"}
-                </p>
-                <p className="text-sm text-gray-500">
+                <h3 className="text-lg font-semibold">{user.fromUserId?.name || "Unknown"}</h3>
+                <p className="text-sm text-[#94a3b8] mt-1">{user.fromUserId?.gender || "Unknown"}</p>
+                <p className="text-xs text-[#64748b]">
                   Skills: {user.fromUserId?.skills?.join(", ") || "N/A"}
                 </p>
 
-                {/* Loading Indicator Inside Card */}
+                {/* Loading or Buttons */}
                 {processing[user._id] ? (
-                  <Loader2
-                    className="animate-spin text-blue-500 mt-4"
-                    size={24}
-                  />
+                  <Loader2 className="animate-spin text-indigo-500 mt-4" size={22} />
                 ) : (
-                  <div className="mt-4 flex space-x-4">
+                  <div className="mt-5 flex gap-3 w-full">
                     <button
                       onClick={() => reviewRequest("accepted", user._id)}
-                      className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-5 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                      className="flex-1 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all border border-emerald-500/20"
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => reviewRequest("rejected", user._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-5 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                      className="flex-1 bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all border border-rose-500/20"
                     >
                       Decline
                     </button>

@@ -2,12 +2,12 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import SuccessPage from "./SuccessPage";
-import Loader from "./Loader"; // Import Loader
+import Loader from "./Loader";
 
 const Premium = () => {
   const [premium, setPremium] = useState(false);
   const [membershipType, setMembershipType] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
   const verifyPremium = async () => {
     try {
@@ -21,7 +21,7 @@ const Premium = () => {
     } catch (error) {
       console.error("Error verifying premium:", error);
     } finally {
-      setLoading(false); // Hide loader after verification
+      setLoading(false);
     }
   };
 
@@ -30,9 +30,8 @@ const Premium = () => {
   }, []);
 
   const handleClick = async (type) => {
-    if (premium) return; // Prevent payment if already premium
-
-    setLoading(true); // Show loader during payment
+    if (premium) return;
+    setLoading(true);
     try {
       const order = await axios.post(
         BASE_URL + "/payment/create",
@@ -48,89 +47,95 @@ const Premium = () => {
         name: "DevWorld",
         description: "Transaction",
         order_id: orderId,
-        prefill: {
-          name: notes.name,
-          email: notes.email,
-        },
-        notes: {
-          address: "Razorpay Corporate Office",
-        },
-        theme: {
-          color: "#3399cc",
-        },
+        prefill: { name: notes.name, email: notes.email },
+        notes: { address: "Razorpay Corporate Office" },
+        theme: { color: "#6366f1" },
         handler: verifyPremium,
       };
-      // window.Razorpay comes from script which is added in index.html;
       var rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
       console.error("Payment error:", error);
     } finally {
-      setLoading(false); // Hide loader after payment process
+      setLoading(false);
     }
   };
 
-  if (loading) {
-    return <Loader />; // Show Loader when verifying or processing payment
-  }
-
-  if (premium) {
-    return <SuccessPage membershipType={membershipType} />;
-  }
+  if (loading) return <Loader />;
+  if (premium) return <SuccessPage membershipType={membershipType} />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex flex-col items-center justify-center p-6 space-y-6">
-      {/* Temporary Note */}
-      <div className="bg-red-600 text-white mt-14 px-4 py-10 rounded-md shadow-lg text-center max-w-2xl w-full">
-        ⚠️ Note: Premium feature purchases are currently available for testing
-        only and accept dummy money. No real transactions will be processed.
+    <div className="min-h-screen bg-[#0a0e1a] text-white flex flex-col items-center justify-center p-4 sm:p-6 pt-20">
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-indigo-600/8 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px]"></div>
       </div>
 
-      <div className="max-w-4xl w-full grid md:grid-cols-2 gap-6">
-        {/* Silver Plan */}
-        <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl shadow-lg p-6 hover:scale-105 hover:shadow-2xl transition-transform border border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-200">Silver Plan</h2>
-          <p className="text-gray-400 mt-2">
-            Basic access with essential features.
-          </p>
-          <p className="text-4xl font-bold text-blue-400 mt-4">$0.1/month</p>
-
-          <ul className="mt-4 space-y-2 text-gray-300">
-            <li>✅ Access to standard features</li>
-            <li>✅ Get a Blue Tick</li>
-            <li>✅ Monthly updates</li>
-            <li>✅ Unlimited Chat With Connection</li>
-          </ul>
-
-          <button
-            onClick={() => handleClick("silver")}
-            className="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold transition-all shadow-md hover:shadow-xl"
-          >
-            Choose Silver
-          </button>
+      <div className="relative z-0 max-w-4xl w-full space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <p className="text-xs font-semibold text-indigo-400 tracking-widest uppercase mb-2">Upgrade</p>
+          <h1 className="text-3xl sm:text-4xl font-bold">Choose Your <span className="gradient-text-warm">Plan</span></h1>
         </div>
 
-        {/* Gold Plan */}
-        <div className="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 rounded-2xl shadow-lg p-6 hover:scale-105 hover:shadow-2xl transition-transform border border-yellow-500 text-gray-900">
-          <h2 className="text-2xl font-bold">Gold Plan</h2>
-          <p className="mt-2 text-gray-800">
-            Premium access with exclusive features.
-          </p>
-          <p className="text-4xl font-bold mt-4 text-gray-900">$0.5/month</p>
+        {/* Note */}
+        <div className="glass-card border-amber-500/20 text-amber-300 px-5 py-4 rounded-xl text-center text-sm max-w-2xl mx-auto">
+          ⚠️ Note: Premium feature purchases are currently available for testing only and accept dummy money.
+        </div>
 
-          <ul className="mt-4 space-y-2 text-gray-900 font-medium">
-            <li>✅ All Silver Plan benefits</li>
-            <li>✅ Unlimited Chat With Connection</li>
-            <li>✅ Unlimited Call With Connection</li>
-            <li>✅ Early access to new features</li>
-          </ul>
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Silver Plan */}
+          <div className="glass-card glass-card-hover rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 flex flex-col">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center text-lg">🥈</div>
+              <h2 className="text-xl font-bold text-white">Silver Plan</h2>
+            </div>
+            <p className="text-[#94a3b8] text-sm mb-5">Basic access with essential features.</p>
+            <p className="text-3xl font-bold text-white mb-1">$0.1<span className="text-sm font-normal text-[#64748b]">/month</span></p>
 
-          <button
-            onClick={() => handleClick("gold")}
-            className="mt-6 w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-lg text-lg font-semibold transition-all shadow-md hover:shadow-xl"
-          >
-            Choose Gold
-          </button>
+            <ul className="mt-5 space-y-3 text-sm text-[#94a3b8] flex-grow">
+              <li className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Access to standard features</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Get a Blue Tick</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Monthly updates</li>
+              <li className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Unlimited Chat With Connection</li>
+            </ul>
+
+            <button
+              onClick={() => handleClick("silver")}
+              className="mt-6 w-full py-3.5 bg-white/[0.06] border border-white/[0.1] text-white rounded-xl font-semibold hover:bg-indigo-500/15 hover:border-indigo-500/30 transition-all duration-300"
+            >
+              Choose Silver
+            </button>
+          </div>
+
+          {/* Gold Plan */}
+          <div className="relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.1))' }}>
+            <div className="absolute inset-0 border border-amber-500/30 rounded-2xl pointer-events-none"></div>
+            {/* Popular badge */}
+            <div className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">Popular</div>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-lg">👑</div>
+              <h2 className="text-xl font-bold text-white">Gold Plan</h2>
+            </div>
+            <p className="text-[#94a3b8] text-sm mb-5">Premium access with exclusive features.</p>
+            <p className="text-3xl font-bold text-white mb-1">$0.5<span className="text-sm font-normal text-[#64748b]">/month</span></p>
+
+            <ul className="mt-5 space-y-3 text-sm text-[#94a3b8] flex-grow">
+              <li className="flex items-center gap-2"><span className="text-amber-400">✓</span> All Silver Plan benefits</li>
+              <li className="flex items-center gap-2"><span className="text-amber-400">✓</span> Unlimited Chat With Connection</li>
+              <li className="flex items-center gap-2"><span className="text-amber-400">✓</span> Unlimited Call With Connection</li>
+              <li className="flex items-center gap-2"><span className="text-amber-400">✓</span> Early access to new features</li>
+            </ul>
+
+            <button
+              onClick={() => handleClick("gold")}
+              className="mt-6 w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 transition-all duration-300"
+            >
+              Choose Gold
+            </button>
+          </div>
         </div>
       </div>
     </div>
