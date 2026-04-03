@@ -235,9 +235,9 @@ const Chat = () => {
   const isOnline = onlineUsers?.includes(connectionUserId);
 
   return (
-    <div className="flex flex-col h-screen h-[100dvh] bg-[#0a0e1a] text-white overflow-hidden">
+    <div className="flex flex-col h-screen h-[100dvh] chat-container bg-[#0a0e1a] text-white overflow-hidden">
       {/* ===== HEADER ===== */}
-      <header className="flex-shrink-0 z-50 bg-[#0a0e1a]/90 backdrop-blur-xl px-3 sm:px-5 py-3 flex items-center gap-3 border-b border-white/[0.06]">
+      <header className="chat-header-fixed flex-shrink-0 z-50 bg-[#0a0e1a] backdrop-blur-xl px-3 sm:px-5 py-3 flex items-center gap-3 border-b border-white/[0.06]">
         <button
           onClick={() => navigate("/connections")}
           className="p-2 rounded-xl hover:bg-white/[0.06] transition-colors flex-shrink-0"
@@ -271,9 +271,11 @@ const Chat = () => {
           </div>
         </div>
       </header>
+      {/* Spacer for fixed header on mobile */}
+      <div className="chat-header-spacer md:hidden"></div>
 
       {/* ===== MESSAGES AREA ===== */}
-      <main className="flex-1 overflow-y-auto chat-wallpaper">
+      <main className="flex-1 overflow-y-auto chat-wallpaper pb-[70px] md:pb-0">
         <div className="max-w-3xl mx-auto px-3 sm:px-5 py-4 space-y-1">
           {/* Full Screen Image Modal */}
           {selectedImage && (
@@ -377,7 +379,7 @@ const Chat = () => {
       </main>
 
       {/* ===== INPUT AREA ===== */}
-      <footer className="flex-shrink-0 bg-[#0a0e1a]/95 backdrop-blur-xl border-t border-white/[0.06] z-50">
+      <footer className="chat-footer-fixed flex-shrink-0 bg-[#0a0e1a] backdrop-blur-xl border-t border-white/[0.06] z-50">
         {/* Image Preview */}
         {(media || mediaLoading) && (
           <div className="px-3 sm:px-5 pt-3 flex items-center">
