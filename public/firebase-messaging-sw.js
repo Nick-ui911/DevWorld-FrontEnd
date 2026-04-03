@@ -40,37 +40,44 @@ messaging.onBackgroundMessage((payload) => {
     }
   });
 });
+// ✅ Claim clients so the SW controls all open tabs (required for navigate())
+self.addEventListener("activate", (event) => {
+  event.waitUntil(clients.claim());
+});
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+
+  const targetUrl =
+    event.notification.data?.url || "https://devworld.in/";
+  const chatPath = new URL(targetUrl).pathname;
 
   event.waitUntil(
     clients
       .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clientList) => {
-        const targetUrl =
-          event.notification.data?.url || "https://devworld.in/";
-
-        const chatPath = new URL(targetUrl).pathname;
-
-        // ✅ find any open tab of your app (not exact match)
+      .then(async (clientList) => {
+        // ✅ Find any open tab of the app
         const matchingClient = clientList.find((client) =>
           client.url.includes("devworld.in"),
         );
 
         if (matchingClient) {
-          matchingClient.focus();
+          // Focus the existing tab first
+          await matchingClient.focus();
 
-          // ✅ IMPORTANT: navigate directly (fixes most issues)
-          matchingClient.navigate(targetUrl);
-
-          // optional (for React state handling)
+          // ✅ Use postMessage to let React Router handle navigation
+          // This is more reliable than WindowClient.navigate() which
+          // can fail on uncontrolled clients
           matchingClient.postMessage({
             type: "OPEN_CHAT",
             path: chatPath,
           });
-        } else {
-          return clients.openWindow(targetUrl);
+
+          return;
         }
+
+        // No existing tab — open a new window
+        return clients.openWindow(targetUrl);
       }),
   );
 });

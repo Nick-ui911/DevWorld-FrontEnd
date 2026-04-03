@@ -13,6 +13,50 @@ import { FaPaperclip } from "react-icons/fa6";
 
 let socket;
 
+// ✅ Helper: always format time as 12-hour AM/PM (e.g. "07:30 PM")
+const formatTime = (timeStr) => {
+  if (!timeStr) return "";
+  // Try to parse the time string into a Date to normalize it
+  const date = new Date(`1970-01-01T${convertTo24Hr(timeStr)}`);
+  if (!isNaN(date.getTime())) {
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  }
+  // Fallback: return as-is if parsing fails
+  return timeStr;
+};
+
+// Convert various time formats to 24-hr for Date parsing
+const convertTo24Hr = (timeStr) => {
+  // Already 24-hr format like "19:30:45" or "19:30"
+  if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(timeStr.trim())) {
+    return timeStr.trim();
+  }
+  // 12-hr format like "7:30:45 PM" or "07:30 AM"
+  const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)$/i);
+  if (match) {
+    let hours = parseInt(match[1], 10);
+    const minutes = match[2];
+    const seconds = match[3] || "00";
+    const period = match[4].toUpperCase();
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+    return `${String(hours).padStart(2, "0")}:${minutes}:${seconds}`;
+  }
+  return timeStr;
+};
+
+const getNowTime = () => {
+  return new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -69,7 +113,7 @@ const Chat = () => {
           mediaType: getMediaType(msg?.media),
           name: isCurrentUser ? "You" : msg?.senderId?.name || "Unknown User",
           date: msg?.date,
-          time: msg?.time,
+          time: formatTime(msg?.time),
           senderId: msg?.senderId?._id,
         };
       });
@@ -165,7 +209,7 @@ const Chat = () => {
       name: user.name,
       userId,
       connectionUserId,
-      time: new Date().toLocaleTimeString(),
+      time: getNowTime(),
       date: new Date().toLocaleDateString(),
     });
 
@@ -197,7 +241,7 @@ const Chat = () => {
       userId,
       connectionUserId,
       text: newMessage,
-      time: new Date().toLocaleTimeString(),
+      time: getNowTime(),
       date: new Date().toLocaleDateString(),
       media,
       mediaType: getMediaType(media),

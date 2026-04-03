@@ -1,23 +1,34 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-// it is for background notification click ?
-
-//Ans - Yes, this is for handling background notification clicks — specifically when a push notification is clicked and the app is already open (in a tab).
-
 const NotificationClickHandler = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-      navigator.serviceWorker.addEventListener("message", (event) => {
-        if (event.data.type === "OPEN_CHAT" && event.data.path) {
-          navigate(event.data.path); // Navigate to chat page
+      // Guard: service workers may not be available in all environments
+      if (!("serviceWorker" in navigator) || !navigator.serviceWorker) {
+        console.warn("Service Worker not supported — NotificationClickHandler disabled");
+        return;
+      }
+
+      const handleMessage = (event) => {
+        console.log("📨 NotificationClickHandler received message:", event.data);
+        if (event.data?.type === "OPEN_CHAT" && event.data?.path) {
+          console.log("🚀 Navigating to:", event.data.path);
+          navigate(event.data.path);
         }
-      });
+      };
+
+      navigator.serviceWorker.addEventListener("message", handleMessage);
+
+      // ✅ Cleanup: remove listener on unmount to prevent duplicates
+      return () => {
+        navigator.serviceWorker.removeEventListener("message", handleMessage);
+      };
     }, [navigate]);
   
-    return null; // This component doesn't render anything
+    return null;
 }
 
 export default NotificationClickHandler;
+
