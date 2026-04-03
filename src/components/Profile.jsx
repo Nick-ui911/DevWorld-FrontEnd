@@ -40,7 +40,7 @@ const Profile = () => {
     : ["Not specified"];
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#0a0e1a] px-4 pt-20 pb-10 text-white">
+    <div className="flex justify-center items-center min-h-screen bg-[#070b14] px-4 pt-20 pb-10 text-white">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-indigo-600/8 rounded-full blur-[120px]"></div>
@@ -74,7 +74,7 @@ const Profile = () => {
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
-              className="relative w-28 h-28 rounded-full border-3 border-[#0a0e1a] shadow-xl object-cover"
+              className="relative w-28 h-28 rounded-full border-3 border-[#070b14] shadow-xl object-cover"
               src={
                 user?.PhotoUrl ||
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"

@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#0a0e1a] px-4">
+    <div className="flex items-center justify-center min-h-screen bg-[#070b14] px-4">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-indigo-600/10 rounded-full blur-[100px]"></div>

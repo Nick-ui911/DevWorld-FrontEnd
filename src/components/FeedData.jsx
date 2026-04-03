@@ -58,7 +58,7 @@ function FeedData() {
   }
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 py-12 bg-[#0a0e1a] text-white relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 py-12 bg-[#070b14] text-white relative overflow-hidden">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-indigo-600/8 rounded-full blur-[120px]"></div>

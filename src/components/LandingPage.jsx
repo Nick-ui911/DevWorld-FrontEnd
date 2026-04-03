@@ -16,7 +16,7 @@ const LandingPage = () => {
       <div className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-4">
         {/* Background */}
         <div className="fixed inset-0 w-full h-full">
-          <div className="absolute inset-0 bg-[#0a0e1a] z-0"></div>
+          <div className="absolute inset-0 bg-[#070b14] z-0"></div>
           <img
             src={bgimage}
             alt="Background"

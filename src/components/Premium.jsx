@@ -65,7 +65,7 @@ const Premium = () => {
   if (premium) return <SuccessPage membershipType={membershipType} />;
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white flex flex-col items-center justify-center p-4 sm:p-6 pt-20">
+    <div className="min-h-screen bg-[#070b14] text-white flex flex-col items-center justify-center p-4 sm:p-6 pt-20">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-indigo-600/8 rounded-full blur-[120px]"></div>

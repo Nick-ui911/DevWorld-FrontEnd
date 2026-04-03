@@ -55,7 +55,7 @@ const Connections = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] px-4 py-12 text-white w-full overflow-hidden pt-24">
+    <div className="min-h-screen bg-[#070b14] px-4 py-12 text-white w-full overflow-hidden pt-24">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-indigo-600/6 rounded-full blur-[120px]"></div>
@@ -107,7 +107,7 @@ const Connections = () => {
                         "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2220431045.jpg"
                       }
                       alt={user?.name || "User"}
-                      className="relative w-20 h-20 rounded-full border-2 border-[#0a0e1a] object-cover"
+                      className="relative w-20 h-20 rounded-full border-2 border-[#070b14] object-cover"
                     />
                   </div>
 

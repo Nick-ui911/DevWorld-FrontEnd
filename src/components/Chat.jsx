@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { Send, ArrowLeft, Image, Smile } from "lucide-react";
+import { Send, ArrowLeft, Smile, Check, CheckCheck } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 import NotPremium from "./NotPremium";
 import { addUser } from "../utils/UserSlice";
@@ -235,48 +235,57 @@ const Chat = () => {
   const isOnline = onlineUsers?.includes(connectionUserId);
 
   return (
-    <div className="flex flex-col h-screen h-[100dvh] chat-container bg-[#0a0e1a] text-white overflow-hidden">
-      {/* ===== HEADER ===== */}
-      <header className="chat-header-fixed flex-shrink-0 z-50 bg-[#0a0e1a] backdrop-blur-xl px-3 sm:px-5 py-3 flex items-center gap-3 border-b border-white/[0.06]">
+    <div className="flex flex-col h-screen h-[100dvh] chat-container bg-[#070b14] text-white overflow-hidden">
+
+      {/* ===== WHATSAPP-STYLE HEADER ===== */}
+      <header className="chat-header-fixed chat-header flex-shrink-0 z-50 px-2 sm:px-4 py-2 flex items-center gap-2">
+        {/* Back button */}
         <button
           onClick={() => navigate("/connections")}
-          className="p-2 rounded-xl hover:bg-white/[0.06] transition-colors flex-shrink-0"
+          className="p-2 rounded-full hover:bg-white/[0.06] transition-all duration-200 flex-shrink-0 active:scale-90"
           aria-label="Go back"
         >
-          <ArrowLeft size={20} className="text-[#94a3b8]" />
+          <ArrowLeft size={22} className="text-[#94a3b8]" />
         </button>
 
-        {/* User info */}
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          {/* Avatar */}
+        {/* User avatar + info */}
+        <div
+          className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer hover:bg-white/[0.03] rounded-xl px-2 py-1.5 transition-colors"
+        >
+          {/* Avatar with online ring */}
           <div className="relative flex-shrink-0">
+            <div className={`absolute -inset-[2px] rounded-full transition-all duration-500 ${
+              isOnline
+                ? 'bg-gradient-to-r from-emerald-400 to-emerald-500 opacity-80'
+                : 'bg-gradient-to-r from-gray-600 to-gray-700 opacity-30'
+            }`}></div>
             <img
               src={connectionUser?.PhotoUrl || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
               alt={connectionUser?.name}
-              className="w-10 h-10 rounded-full object-cover border-2 border-white/10"
+              className="relative w-10 h-10 rounded-full object-cover border-[2px] border-[#0f1729]"
             />
-            {/* Online dot */}
-            <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#0a0e1a] ${
-              isOnline ? 'bg-emerald-400' : 'bg-[#64748b]'
-            }`}></span>
           </div>
 
-          <div className="min-w-0">
-            <h2 className="font-semibold text-base truncate text-white">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-semibold text-[15px] truncate text-white leading-tight">
               {connectionUser ? connectionUser.name : "Loading..."}
             </h2>
-            <p className={`text-xs ${isOnline ? 'text-emerald-400' : 'text-[#64748b]'}`}>
-              {isOnline ? 'Online' : 'Offline'}
+            <p className={`text-[11px] font-medium leading-tight mt-0.5 ${
+              isOnline ? 'text-emerald-400' : 'text-[#64748b]'
+            }`}>
+              {isOnline ? '● online' : '○ offline'}
             </p>
           </div>
         </div>
       </header>
+
       {/* Spacer for fixed header on mobile */}
       <div className="chat-header-spacer md:hidden"></div>
 
       {/* ===== MESSAGES AREA ===== */}
-      <main className="flex-1 overflow-y-auto chat-wallpaper pb-[70px] md:pb-0">
-        <div className="max-w-3xl mx-auto px-3 sm:px-5 py-4 space-y-1">
+      <main className="flex-1 overflow-y-auto chat-wallpaper pb-[72px] md:pb-0 relative">
+        <div className="relative z-[1] max-w-3xl mx-auto px-3 sm:px-4 py-4 space-y-[3px]">
+
           {/* Full Screen Image Modal */}
           {selectedImage && (
             <div
@@ -284,7 +293,7 @@ const Chat = () => {
               onClick={() => setSelectedImage(null)}
             >
               <button
-                className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl bg-white/10 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center transition-colors"
+                className="absolute top-4 right-4 text-white/70 hover:text-white text-xl bg-white/10 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center transition-all hover:bg-white/20 hover:scale-105"
                 onClick={() => setSelectedImage(null)}
                 aria-label="Close image"
               >
@@ -303,39 +312,40 @@ const Chat = () => {
           {messages.map((msg, index) => {
             const isSender = msg.senderId === userId;
             const showDateSeparator = index === 0 || messages[index - 1]?.date !== msg.date;
+            const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.senderId !== msg.senderId;
 
             return (
               <React.Fragment key={index}>
-                {/* Date separator */}
+                {/* Date separator - WhatsApp style */}
                 {showDateSeparator && msg.date && (
                   <div className="flex justify-center my-4">
-                    <span className="px-3 py-1 rounded-lg bg-white/[0.05] text-[10px] text-[#64748b] font-medium">
+                    <span className="chat-date-pill">
                       {msg.date}
                     </span>
                   </div>
                 )}
 
-                <div className={`flex ${isSender ? "justify-end" : "justify-start"} mb-0.5`}>
+                <div className={`flex ${isSender ? "justify-end" : "justify-start"} ${isLastInGroup ? 'mb-2' : 'mb-[2px]'}`}>
                   <div
-                    className={`relative max-w-[80%] sm:max-w-[65%] px-3.5 py-2 ${
+                    className={`relative max-w-[82%] sm:max-w-[65%] px-3 py-1.5 shadow-sm ${
                       isSender
-                        ? "bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl rounded-br-md"
-                        : "bg-[#1e293b] rounded-2xl rounded-bl-md"
-                    } shadow-sm`}
+                        ? `chat-bubble-sent ${!isLastInGroup ? 'rounded-xl' : ''}`
+                        : `chat-bubble-received ${!isLastInGroup ? 'rounded-xl' : ''}`
+                    }`}
                   >
                     {msg.text && (
-                      <p className="text-[14px] sm:text-[15px] leading-relaxed break-words text-white/95">
+                      <p className="text-[14px] sm:text-[15px] leading-[1.35] break-words text-white/95">
                         {msg.text}
                       </p>
                     )}
 
                     {msg.media && (
-                      <div className="mt-1">
+                      <div className="mt-1.5 mb-0.5">
                         {msg.mediaType === "image" && (
                           <img
                             src={msg.media}
                             alt="Media"
-                            className="w-full max-w-[220px] sm:max-w-[260px] h-auto object-cover rounded-xl cursor-pointer hover:opacity-90 transition-opacity"
+                            className="w-full max-w-[240px] sm:max-w-[280px] h-auto object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                             onClick={() => setSelectedImage(msg.media)}
                           />
                         )}
@@ -343,7 +353,7 @@ const Chat = () => {
                           <video
                             src={msg.media}
                             controls
-                            className="w-full max-w-[220px] sm:max-w-[260px] rounded-xl"
+                            className="w-full max-w-[240px] sm:max-w-[280px] rounded-lg"
                           />
                         )}
                         {msg.mediaType === "raw" && (
@@ -351,7 +361,7 @@ const Chat = () => {
                             href={msg.media}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-indigo-300 hover:text-indigo-200 underline text-sm transition-colors"
+                            className="inline-flex items-center gap-1.5 text-blue-300 hover:text-blue-200 underline text-sm transition-colors"
                           >
                             📄 View File
                           </a>
@@ -362,12 +372,17 @@ const Chat = () => {
                       </div>
                     )}
 
-                    {/* Time */}
-                    <p className={`text-[10px] mt-1 text-right ${
-                      isSender ? 'text-white/40' : 'text-[#64748b]'
+                    {/* Time + tick marks like WhatsApp */}
+                    <div className={`flex items-center gap-1 justify-end mt-0.5 -mb-0.5 ${
+                      isSender ? '' : ''
                     }`}>
-                      {msg.time}
-                    </p>
+                      <span className={`text-[10px] ${isSender ? 'msg-time-sent' : 'msg-time'}`}>
+                        {msg.time}
+                      </span>
+                      {isSender && (
+                        <CheckCheck size={14} className="text-blue-400/50" />
+                      )}
+                    </div>
                   </div>
                 </div>
               </React.Fragment>
@@ -378,29 +393,29 @@ const Chat = () => {
         </div>
       </main>
 
-      {/* ===== INPUT AREA ===== */}
-      <footer className="chat-footer-fixed flex-shrink-0 bg-[#0a0e1a] backdrop-blur-xl border-t border-white/[0.06] z-50">
+      {/* ===== WHATSAPP-STYLE INPUT AREA ===== */}
+      <footer className="chat-footer-fixed chat-input-container flex-shrink-0 z-50">
         {/* Image Preview */}
         {(media || mediaLoading) && (
-          <div className="px-3 sm:px-5 pt-3 flex items-center">
+          <div className="px-3 sm:px-4 pt-3 flex items-center">
             <div className="relative">
               {mediaLoading ? (
-                <div className="h-16 w-16 flex items-center justify-center bg-white/[0.04] rounded-xl border border-white/[0.08]">
-                  <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="h-16 w-16 flex items-center justify-center bg-white/[0.03] rounded-xl border border-white/[0.06]">
+                  <div className="w-5 h-5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : (
                 <>
                   <img
                     src={media}
                     alt="preview"
-                    className="h-16 w-16 object-cover rounded-xl border border-white/[0.08] shadow-lg"
+                    className="h-16 w-16 object-cover rounded-xl border border-white/[0.06] shadow-lg"
                   />
                   <button
                     onClick={() => {
                       setMedia(null);
                       setSelectedImage(null);
                     }}
-                    className="absolute -top-1.5 -right-1.5 bg-rose-500 hover:bg-rose-400 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold transition-colors shadow-lg"
+                    className="absolute -top-1.5 -right-1.5 bg-rose-500 hover:bg-rose-400 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold transition-all shadow-lg hover:scale-110"
                     aria-label="Remove image"
                   >
                     ✕
@@ -412,37 +427,20 @@ const Chat = () => {
         )}
 
         {/* Input Controls */}
-        <div className="px-2 sm:px-4 py-2.5 sm:py-3 flex items-center gap-1.5 sm:gap-2">
-          {/* File Upload */}
-          <div className="flex-shrink-0">
-            <input
-              type="file"
-              id="fileInput"
-              accept="image/*,video/*"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-            <label
-              htmlFor="fileInput"
-              className="cursor-pointer p-2.5 rounded-xl hover:bg-white/[0.06] transition-all flex items-center justify-center text-[#64748b] hover:text-[#94a3b8]"
-            >
-              <FaPaperclip size={18} />
-            </label>
-          </div>
-
+        <div className="px-2 sm:px-3 py-2 sm:py-2.5 flex items-center gap-1 sm:gap-1.5">
           {/* Emoji Picker */}
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="p-2.5 rounded-xl hover:bg-white/[0.06] transition-all text-[#64748b] hover:text-[#94a3b8]"
+              className="p-2.5 rounded-full hover:bg-white/[0.06] transition-all text-[#64748b] hover:text-[#94a3b8] active:scale-90"
               aria-label="Open emoji picker"
             >
-              <Smile size={20} />
+              <Smile size={22} />
             </button>
 
             {showEmojiPicker && (
               <div className="absolute bottom-full left-0 mb-2 z-[60]">
-                <div className="scale-75 origin-bottom-left sm:scale-90 md:scale-100">
+                <div className="scale-[0.82] origin-bottom-left sm:scale-90 md:scale-100">
                   <EmojiPicker
                     onEmojiClick={handleEmojiClick}
                     theme="dark"
@@ -454,7 +452,24 @@ const Chat = () => {
             )}
           </div>
 
-          {/* Message Input */}
+          {/* File Upload */}
+          <div className="flex-shrink-0">
+            <input
+              type="file"
+              id="fileInput"
+              accept="image/*,video/*"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <label
+              htmlFor="fileInput"
+              className="cursor-pointer p-2.5 rounded-full hover:bg-white/[0.06] transition-all flex items-center justify-center text-[#64748b] hover:text-[#94a3b8] active:scale-90"
+            >
+              <FaPaperclip size={19} className="rotate-45" />
+            </label>
+          </div>
+
+          {/* Message Input - WhatsApp style rounded */}
           <div className="flex-1 min-w-0">
             <input
               value={newMessage}
@@ -462,19 +477,19 @@ const Chat = () => {
               onKeyDown={handleKeyPress}
               onFocus={() => setShowEmojiPicker(false)}
               type="text"
-              className="w-full px-4 py-2.5 text-sm sm:text-base bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/20 transition-all"
-              placeholder="Type a message..."
+              className="w-full px-4 py-2.5 text-[14px] sm:text-[15px] bg-white/[0.04] border border-white/[0.06] rounded-full text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/30 transition-all"
+              placeholder="Type a message"
             />
           </div>
 
-          {/* Send Button */}
+          {/* Send Button - WhatsApp style circle */}
           <button
             onClick={sendMessage}
             disabled={!newMessage.trim() && !media}
-            className="flex-shrink-0 bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2.5 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:shadow-none"
+            className="flex-shrink-0 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white p-2.5 rounded-full hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:shadow-none active:scale-90"
             aria-label="Send message"
           >
-            <Send size={18} />
+            <Send size={19} className="translate-x-[1px]" />
           </button>
         </div>
       </footer>

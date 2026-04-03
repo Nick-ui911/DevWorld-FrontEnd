@@ -7,7 +7,7 @@ const SuccessPage = ({ membershipType }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0a0e1a] text-white relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#070b14] text-white relative">
       <Confetti />
       
       <motion.div

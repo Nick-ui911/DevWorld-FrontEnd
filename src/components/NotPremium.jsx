@@ -10,7 +10,7 @@ const NotPremium = () => {
       initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="flex flex-col items-center justify-center h-screen bg-[#0a0e1a] text-white text-center p-6"
+      className="flex flex-col items-center justify-center h-screen bg-[#070b14] text-white text-center p-6"
     >
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">

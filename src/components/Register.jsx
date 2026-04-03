@@ -97,7 +97,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#0a0e1a] pt-20 pb-10 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-[#070b14] pt-20 pb-10 px-4">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 right-1/3 w-72 h-72 bg-violet-600/10 rounded-full blur-[100px]"></div>

@@ -106,7 +106,7 @@ const EditProfile = () => {
   const inputClass = "w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-[#64748b] focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-all";
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen p-4 pt-20 pb-10 bg-[#0a0e1a] text-white">
+    <div className="flex flex-col justify-center items-center min-h-screen p-4 pt-20 pb-10 bg-[#070b14] text-white">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-indigo-600/8 rounded-full blur-[120px]"></div>

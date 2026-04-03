@@ -9,7 +9,7 @@ const OfflineScreen = () => {
   if (isOnline) return null;
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#0a0e1a] text-white z-50 text-center p-6">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#070b14] text-white z-50 text-center p-6">
       {/* Background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/3 w-72 h-72 bg-rose-600/8 rounded-full blur-[120px]"></div>
