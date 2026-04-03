@@ -1,8 +1,8 @@
 importScripts(
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
 );
 importScripts(
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
 );
 
 const firebaseConfig = {
@@ -26,7 +26,7 @@ messaging.onBackgroundMessage((payload) => {
   const clickUrl = payload.data?.click_action || "https://devworld.in/";
 
   // Ensure notifications don’t stack unnecessarily
- // In your service worker code, self refers to the service worker global scope. It's similar to window in a browser but for service workers.
+  // In your service worker code, self refers to the service worker global scope. It's similar to window in a browser but for service workers.
   self.registration.getNotifications().then((existingNotifications) => {
     const isDuplicate = existingNotifications.some((n) => n.title === title);
     if (!isDuplicate) {
@@ -41,41 +41,36 @@ messaging.onBackgroundMessage((payload) => {
   });
 });
 self.addEventListener("notificationclick", (event) => {
-  event.notification.close(); // Close notification when clicked
+  event.notification.close();
 
   event.waitUntil(
     clients
-      // This below line gets all open browser tabs (clients) of your web app.
-      //      type: "window" → Only look for tabs (not workers or shared clients).
-
-      // includeUncontrolled: true → Include tabs not yet controlled by the service worker (like just opened).
-
       .matchAll({ type: "window", includeUncontrolled: true })
-      // A promise that resolves to clientList – an array of open tabs of your app.
-      // You can then:
-
-      // Check if the app is already open
-
-      // Focus an existing tab
-
-      // Or open a new one
       .then((clientList) => {
         const targetUrl =
           event.notification.data?.url || "https://devworld.in/";
-        const chatPath = new URL(targetUrl).pathname; // Extract /chat/:id
 
-        const matchingClient = clientList.find(
-          (client) => client.url === "https://devworld.in/"
+        const chatPath = new URL(targetUrl).pathname;
+
+        // ✅ find any open tab of your app (not exact match)
+        const matchingClient = clientList.find((client) =>
+          client.url.includes("devworld.in"),
         );
 
         if (matchingClient) {
-          // If the app is already open, navigate to chat
           matchingClient.focus();
-          // Sends a message to the app with the chat path in NotificationClickHandler.jsx
-          matchingClient.postMessage({ type: "OPEN_CHAT", path: chatPath });
+
+          // ✅ IMPORTANT: navigate directly (fixes most issues)
+          matchingClient.navigate(targetUrl);
+
+          // optional (for React state handling)
+          matchingClient.postMessage({
+            type: "OPEN_CHAT",
+            path: chatPath,
+          });
         } else {
           return clients.openWindow(targetUrl);
         }
-      })
+      }),
   );
 });
