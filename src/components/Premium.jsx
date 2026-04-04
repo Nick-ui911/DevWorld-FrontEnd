@@ -65,14 +65,14 @@ const Premium = () => {
   if (premium) return <SuccessPage membershipType={membershipType} />;
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-white flex flex-col items-center justify-center p-4 sm:p-6 pt-26">
+    <div className="min-h-screen bg-[#070b14] text-white flex flex-col items-center justify-center p-4 sm:p-6 pt-26 ">
       {/* Background orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-indigo-600/8 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px]"></div>
       </div>
 
-      <div className="relative z-0 max-w-4xl w-full space-y-8">
+      <div className="relative z-0 max-w-4xl w-full space-y-8 mt-16">
         {/* Header */}
         <div className="text-center">
           <p className="text-xs font-semibold text-indigo-400 tracking-widest uppercase mb-2">Upgrade</p>

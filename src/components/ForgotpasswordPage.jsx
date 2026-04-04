@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { EyeIcon, EyeOffIcon, CheckCircleIcon, Loader2Icon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, CheckCircleIcon, Loader2Icon, XCircleIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -32,7 +32,6 @@ const ForgotPasswordPage = () => {
       setOldPassword("");
       setNewPassword("");
 
-      // Hide success message after 3 seconds
       setTimeout(() => {
         setMessage("");
         setSuccess(false);
@@ -44,105 +43,159 @@ const ForgotPasswordPage = () => {
     }
   };
 
+  const inputClass =
+    "w-full px-4 py-3 pr-11 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-[#475569] text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/[0.06] transition-all duration-300";
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 p-6">
-    <div className="max-w-md w-full mx-auto p-6 bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 rounded-lg shadow-2xl relative">
-      <h2 className="text-2xl font-bold text-center mb-6 text-white">
-        Change Password
-      </h2>
-  
-      {/* Success Message with Animation */}
-      <AnimatePresence>
-        {message && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className={`mb-4 p-3 text-center rounded-lg shadow-md flex items-center justify-center gap-2 ${
-              success
-                ? "bg-green-500/20 text-green-400 border border-green-600"
-                : "bg-red-500/20 text-red-400 border border-red-600"
-            }`}
-          >
-            {success ? <CheckCircleIcon size={20} /> : null}
-            {message}
-          </motion.div>
-        )}
-      </AnimatePresence>
-  
-      <form onSubmit={handleSubmit}>
-        {/* Old Password */}
-        <div className="mb-4 relative">
-          <label className="block text-sm font-medium text-gray-300">
-            Old Password
-          </label>
-          <div className="relative">
-            <input
-              type={showOldPassword ? "text" : "password"}
-              className="w-full text-white p-3 bg-gray-900 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-500"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              placeholder="Enter old password"
-              required
-              disabled={loading}
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white transition"
-              onClick={() => setShowOldPassword(!showOldPassword)}
-            >
-              {showOldPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-            </button>
-          </div>
-        </div>
-  
-        {/* New Password */}
-        <div className="mb-4 relative">
-          <label className="block text-sm font-medium text-gray-300">
-            New Password
-          </label>
-          <div className="relative">
-            <input
-              type={showNewPassword ? "text" : "password"}
-              className="w-full text-white p-3 bg-gray-900 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-500"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Enter new password"
-              required
-              disabled={loading}
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white transition"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-            >
-              {showNewPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-            </button>
-          </div>
-        </div>
-  
-        {/* Submit Button with Loader */}
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white font-semibold p-3 rounded-lg hover:opacity-90 transition duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={loading}
+    <div className="min-h-screen bg-[#070b14] text-white flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-600/8 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px]" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md"
+      >
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.5 }}
+          className="text-center mb-8"
         >
-          {loading ? <Loader2Icon className="animate-spin" size={20} /> : null}
-          {loading ? "Updating..." : "Update Password"}
-        </button>
-        <div className="text-center mt-4">
-            <p className="text-sm text-white">
-              Don't have an account?{" "}
-              <Link to="/createpassword" className="text-blue-600 hover:underline">
-                Create Password
-              </Link>
-            </p>
+          <div className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-sm text-[#94a3b8]">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            Account Security
           </div>
-      </form>
+          <h1 className="text-4xl sm:text-5xl font-black leading-tight tracking-tight mb-3">
+            Change{" "}
+            <span className="gradient-text-warm">Password</span>
+          </h1>
+          <p className="text-[#94a3b8] text-sm leading-relaxed">
+            Keep your account secure with a strong password.
+          </p>
+        </motion.div>
+
+        {/* Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
+          className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-7 sm:p-8 backdrop-blur-sm"
+        >
+          {/* Message */}
+          <AnimatePresence>
+            {message && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                transition={{ duration: 0.3 }}
+                className={`mb-5 px-4 py-3 rounded-xl text-sm flex items-center gap-2 border ${
+                  success
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                    : "bg-red-500/10 text-red-400 border-red-500/20"
+                }`}
+              >
+                {success ? <CheckCircleIcon size={16} /> : <XCircleIcon size={16} />}
+                {message}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Old Password */}
+            <div>
+              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
+                Current Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showOldPassword ? "text" : "password"}
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  placeholder="Enter current password"
+                  className={inputClass}
+                  required
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowOldPassword(!showOldPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-[#475569] hover:text-[#94a3b8] transition-colors duration-200"
+                >
+                  {showOldPassword ? <EyeOffIcon size={17} /> : <EyeIcon size={17} />}
+                </button>
+              </div>
+            </div>
+
+            {/* New Password */}
+            <div>
+              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
+                New Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className={inputClass}
+                  required
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute inset-y-0 right-3 flex items-center text-[#475569] hover:text-[#94a3b8] transition-colors duration-200"
+                >
+                  {showNewPassword ? <EyeOffIcon size={17} /> : <EyeIcon size={17} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <motion.button
+              type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              disabled={loading}
+              className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-shadow duration-300 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2Icon size={16} className="animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Update Password"
+              )}
+            </motion.button>
+          </form>
+        </motion.div>
+
+        {/* Footer link */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="text-center text-[#475569] text-sm mt-6"
+        >
+          Don't have a password?{" "}
+          <Link
+            to="/createpassword"
+            className="text-indigo-400 hover:text-indigo-300 transition-colors duration-200"
+          >
+            Create Password
+          </Link>
+        </motion.p>
+      </motion.div>
     </div>
-  </div>
-  
-  
   );
 };
 

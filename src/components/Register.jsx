@@ -92,7 +92,7 @@ const Register = () => {
       handleFcmToken(response.data.data._id);
     } catch (error) {
       console.log(error);
-      setErrorMessage("Google Sign Up failed. Please try again.");
+      setErrorMessage(error.response?.data?.message || "Something went wrong. Please try again.");
     }
   };
 
