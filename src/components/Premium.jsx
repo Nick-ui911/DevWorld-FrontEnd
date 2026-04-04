@@ -92,7 +92,7 @@ const Premium = () => {
               <h2 className="text-xl font-bold text-white">Silver Plan</h2>
             </div>
             <p className="text-[#94a3b8] text-sm mb-5">Basic access with essential features.</p>
-            <p className="text-3xl font-bold text-white mb-1">$0.1<span className="text-sm font-normal text-[#64748b]">/month</span></p>
+            <p className="text-3xl font-bold text-white mb-1">₹100<span className="text-sm font-normal text-[#64748b]">/month</span></p>
 
             <ul className="mt-5 space-y-3 text-sm text-[#94a3b8] flex-grow">
               <li className="flex items-center gap-2"><span className="text-emerald-400">✓</span> Access to standard features</li>
@@ -120,7 +120,7 @@ const Premium = () => {
               <h2 className="text-xl font-bold text-white">Gold Plan</h2>
             </div>
             <p className="text-[#94a3b8] text-sm mb-5">Premium access with exclusive features.</p>
-            <p className="text-3xl font-bold text-white mb-1">$0.5<span className="text-sm font-normal text-[#64748b]">/month</span></p>
+            <p className="text-3xl font-bold text-white mb-1">₹200<span className="text-sm font-normal text-[#64748b]">/month</span></p>
 
             <ul className="mt-5 space-y-3 text-sm text-[#94a3b8] flex-grow">
               <li className="flex items-center gap-2"><span className="text-amber-400">✓</span> All Silver Plan benefits</li>
